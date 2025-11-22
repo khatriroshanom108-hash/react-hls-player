@@ -1,157 +1,36 @@
-# React Player HLS
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-![NPM Downloads](https://img.shields.io/npm/dm/@gumlet/react-hls-player?style=flat-square)
-![npm bundle size](https://img.shields.io/bundlephobia/min/@gumlet/react-hls-player)
+## Getting Started
 
-## Introduction
-
-`@gumlet/react-hls-player` is a simple HLS live stream player.
-It uses [hls.js](https://github.com/video-dev/hls.js) to play your hls live stream if your browser supports `html 5 video` and `MediaSource Extension`.
+First, run the development server:
 
 ```bash
-npm i @gumlet/react-hls-player
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-## Examples
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Using the ReactHlsPlayer component
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactHlsPlayer from '@gumlet/react-hls-player';
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-ReactDOM.render(
-  <ReactHlsPlayer
-    src="https://video.gumlet.io/5f462c1561cf8a766464ffc4/635789f017629894d4d125a4/main.m3u8"
-    autoPlay={false}
-    controls={true}
-    width="100%"
-    height="auto"
-  />,
-  document.getElementById('app')
-);
-```
+## Learn More
 
-### Using hlsConfig (advanced use case)
+To learn more about Next.js, take a look at the following resources:
 
-All available config properties can be found on the [Fine Tuning](https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning) section of the Hls.js API.md
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactHlsPlayer from '@gumlet/react-hls-player';
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-ReactDOM.render(
-  <ReactHlsPlayer
-    src="https://video.gumlet.io/5f462c1561cf8a766464ffc4/635789f017629894d4d125a4/main.m3u8"
-    hlsConfig={{
-      maxLoadingDelay: 4,
-      minAutoBitrate: 0,
-      lowLatencyMode: true,
-    }}
-  />,
-  document.getElementById('app')
-);
-```
+## Deploy on Vercel
 
-### Using playerRef
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-The `playerRef` returns a ref to the underlying video component, and as such will give you access to all video component properties and methods.
-
-```javascript
-import React from 'react';
-import ReactHlsPlayer from '@gumlet/react-hls-player';
-
-function MyCustomComponent() {
-  const playerRef = React.useRef();
-
-  function playVideo() {
-    playerRef.current.play();
-  }
-
-  function pauseVideo() {
-    playerRef.current.pause();
-  }
-
-  function toggleControls() {
-    playerRef.current.controls = !playerRef.current.controls;
-  }
-
-  return (
-    <ReactHlsPlayer
-      playerRef={playerRef}
-      getHLSRef={(hlsJSObject) => { console.log(hlsJSObject); }}
-      src="https://video.gumlet.io/5f462c1561cf8a766464ffc4/635789f017629894d4d125a4/main.m3u8"
-    />
-  );
-}
-
-ReactDOM.render(<MyCustomComponent />, document.getElementById('app'));
-```
-
-You can also listen to events of the video
-
-```javascript
-import React from 'react';
-import ReactHlsPlayer from '@gumlet/react-hls-player';
-
-function MyCustomComponent() {
-  const playerRef = React.useRef();
-
-  React.useEffect(() => {
-    function fireOnVideoStart() {
-      // Do some stuff when the video starts/resumes playing
-    }
-
-    playerRef.current.addEventListener('play', fireOnVideoStart);
-
-    return playerRef.current.removeEventListener('play', fireOnVideoStart);
-  }, []);
-
-  React.useEffect(() => {
-    function fireOnVideoEnd() {
-      // Do some stuff when the video ends
-    }
-
-    playerRef.current.addEventListener('ended', fireOnVideoEnd);
-
-    return playerRef.current.removeEventListener('ended', fireOnVideoEnd);
-  }, []);
-
-  return (
-    <ReactHlsPlayer
-      playerRef={playerRef}
-      src="https://video.gumlet.io/5f462c1561cf8a766464ffc4/635789f017629894d4d125a4/main.m3u8"
-    />
-  );
-}
-
-ReactDOM.render(<MyCustomComponent />, document.getElementById('app'));
-```
-
-## Props
-
-All [video properties](https://www.w3schools.com/tags/att_video_poster.asp) are supported and passed down to the underlying video component
-
-| Prop                     | Description                                                                                                             |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| src `String`, `required` | The hls url that you want to play                                                                                       |
-| autoPlay `Boolean`       | Autoplay when component is ready. Defaults to `false`                                                                   |
-| controls `Boolean`       | Whether or not to show the playback controls. Defaults to `false`                                                       |
-| width `Number`           | Video width. Defaults to `100%`                                                                                         |
-| height `Number`          | Video height. Defaults to `auto`                                                                                        |
-| hlsConfig `Object`       | `hls.js` config, you can see all config [here](https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning) |
-| playerRef `React Ref`    | Pass in your own ref to interact with the video player directly. This will override the default ref.                    |
-| getHLSRef `Callback`     | Get the HLS player object reference in a callback, as soon as the player object is defined.                    |
-
-
-
-## Maintainer
-
-This library is maintained by <a href="https://www.gumlet.com" target="_blank">Gumlet.com</a>
-
-[<img src="https://assets.gumlet.com/public/img/logo.png" width="300px">](https://www.gumlet.com)
-
-<!-- markdownlint-enable -->
-<!-- prettier-ignore-end -->
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
